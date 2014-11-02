@@ -11,6 +11,11 @@ int sideLength; // SLOT_SIZE * nSlot
 int ix; // (width - sideLength)/2
 int iy; // (height - sideLength)/2
 
+int [][] Col_Row = new int[9][2];
+int [][] checkCol_Row_Bombs = new int[4][4];
+int [][] checkCol_Row_Flags = new int[4][4];
+int [][] checkCol_Row_Click = new int[4][4];
+
 // game state
 final int GAME_START = 1;
 final int GAME_RUN = 2;
@@ -67,9 +72,20 @@ void draw(){
           break;
     case GAME_RUN:
           //---------------- put you code here ----
-
+          if(clickCount==16-bombCount){
+            for(int ix=0;ix<4;ix++){
+              for(int iy=0;iy<4;iy++){
+                if(checkCol_Row_Flags[ix][iy]==1){
+                  showSlot(ix, iy, SLOT_FLAG_BOMB);
+                }
+              }
+            }
+            gameState = GAME_WIN;
+          }
+          
+          break;  
           // -----------------------------------
-          break;
+
     case GAME_WIN:
           textSize(18);
           fill(0);
@@ -85,6 +101,163 @@ void draw(){
 
 int countNeighborBombs(int col,int row){
   // -------------- Requirement B ---------
+  int neighborBombs = 0;
+  int position = 0;
+  
+  final int midle = 0;
+  final int left = 1;
+  final int right = 2;
+  final int up = 3;
+  final int down = 4;
+  final int up_left = 5;
+  final int up_right = 6;
+  final int down_left = 7;
+  final int down_right = 8;
+
+  if(((col==1)||(col==2)) && ((row==1)||(row==2))){
+    position = midle;
+  }
+  
+  if(((col==1)||(col==2)) && (row==0)){
+    position = up;
+  }
+  
+  if((col==0) && ((row==1)||(row==2))){
+    position = left;
+  }
+  
+  if((col==3) && ((row==1)||(row==2))){
+    position = right;
+  }
+  
+  if(((col==1)||(col==2)) && (row==3)){
+    position = down;
+  }
+  
+  if(col==0 && row==0){
+    position = up_left;
+  }
+  
+  if(col==3 && row==0){
+    position = up_right;
+  }  
+  
+  if(col==0 && row==3){
+    position = down_left;
+  }
+
+  if(col==3 && row==3){
+    position = down_right;
+  }  
+
+  switch (position){
+    case midle:
+      for(int x = col-1 ; x <= col+1 ; x++){
+        for(int y = row-1 ; y <= row+1 ; y++){
+          if(checkCol_Row_Bombs[x][y]==1){
+            neighborBombs++;
+          }
+        }
+      }
+      println(neighborBombs);
+      return neighborBombs;
+
+      
+      case up:
+      for(int x = col-1 ; x <= col+1 ; x++){
+        for(int y = row ; y <= row+1 ; y++){
+          if(checkCol_Row_Bombs[x][y]==1){
+            neighborBombs++;
+          }
+        }
+      }
+      println(neighborBombs);
+      return neighborBombs;
+
+      
+      case left:
+      for(int x = col ; x <= col+1 ; x++){
+        for(int y = row-1 ; y <= row+1 ; y++){
+          if(checkCol_Row_Bombs[x][y]==1){
+            neighborBombs++;
+          }
+        }
+      }
+      println(neighborBombs);
+      return neighborBombs;
+
+
+      case right:
+      for(int x = col-1 ; x <= col ; x++){
+        for(int y = row-1 ; y <= row+1 ; y++){
+          if(checkCol_Row_Bombs[x][y]==1){
+            neighborBombs++;
+          }
+        }
+      }
+      println(neighborBombs);
+      return neighborBombs;
+
+
+      case down:
+      for(int x = col-1 ; x <= col+1 ; x++){
+        for(int y = row-1 ; y <= row ; y++){
+          if(checkCol_Row_Bombs[x][y]==1){
+            neighborBombs++;
+          }
+        }
+      }
+      println(neighborBombs);
+      return neighborBombs;
+    
+
+      case up_left:
+      for(int x = col ; x <= col+1 ; x++){
+        for(int y = row ; y <= row+1 ; y++){
+          if(checkCol_Row_Bombs[x][y]==1){
+            neighborBombs++;
+          }
+        }
+      }
+      println(neighborBombs);
+      return neighborBombs;
+    
+
+      case up_right:
+      for(int x = col-1 ; x <= col ; x++){
+        for(int y = row ; y <= row+1 ; y++){
+          if(checkCol_Row_Bombs[x][y]==1){
+            neighborBombs++;
+          }
+        }
+      }
+      println(neighborBombs);
+      return neighborBombs;
+ 
+      case down_left:
+      for(int x = col ; x <= col+1 ; x++){
+        for(int y = row-1 ; y <= row ; y++){
+          if(checkCol_Row_Bombs[x][y]==1){
+            neighborBombs++;
+          }
+        }
+      }
+      println(neighborBombs);
+      return neighborBombs;
+
+
+      case down_right:
+      for(int x = col-1 ; x <= col ; x++){
+        for(int y = row-1 ; y <= row ; y++){
+          if(checkCol_Row_Bombs[x][y]==1){
+            neighborBombs++;
+          }
+        }
+      }
+      println(neighborBombs);
+      return neighborBombs;
+
+  }
   return 0;
 }
 
@@ -95,11 +268,28 @@ void setBombs(){
       slot[col][row] = SLOT_OFF;
     }
   }
+  
+  
   // -------------- put your code here ---------
   // randomly set bombs
+    for(int i = 0;i<bombCount;i++){
+      while(true){
+        
+      int randomCol = ceil(random(0,4))-1;
+      int randomRow = ceil(random(0,4))-1;
+      println(randomCol,randomRow);
+        if(checkCol_Row_Bombs[randomCol][randomRow]==0){
+            Col_Row[i][0]=randomCol;
+            Col_Row[i][1]=randomRow;
+            checkCol_Row_Bombs[randomCol][randomRow]=1;
+            break;
+        }
+        
+      }
+    }
 
-  // ---------------------------------------
 }
+
 
 void drawEmptySlots(){
   background(180);
@@ -160,6 +350,26 @@ void mouseClicked(){
        bombCount = num;
        
        // start the game
+       for(int ix=0;ix<4;ix++){
+         for(int iy=0;iy<4;iy++){
+           checkCol_Row_Bombs[ix][iy]=0;
+         }
+       }
+       
+       for(int ix=0;ix<4;ix++){
+         for(int iy=0;iy<4;iy++){
+           checkCol_Row_Flags[ix][iy]=0;
+         }
+       }
+       
+       for(int ix=0;ix<4;ix++){
+         for(int iy=0;iy<4;iy++){
+           checkCol_Row_Click[ix][iy]=0;
+         }
+       }
+       
+
+       
        clickCount = 0;
        flagCount = 0;
        setBombs();
@@ -175,8 +385,47 @@ void mousePressed(){
     
     // --------------- put you code here -------     
 
-    // -------------------------
+    int slotpositionX = (int)map(mouseX, ix , ix+sideLength , 0 , 4);
+    int slotpositionY = (int)map(mouseY, iy , iy+sideLength , 0 , 4);
     
+  if(mouseButton==LEFT){
+    if(checkCol_Row_Bombs[slotpositionX][slotpositionY]==1){
+      showSlot(slotpositionX, slotpositionY, SLOT_BOMB);
+      gameState = GAME_LOSE;
+      clickCount++;
+    }else{
+      showSlot(slotpositionX, slotpositionY, SLOT_SAFE);
+      countNeighborBombs(slotpositionX,slotpositionY);
+      checkCol_Row_Click[slotpositionX][slotpositionY] = 1;
+      clickCount++;
+    }
+  }
+  if(mouseButton==RIGHT && checkCol_Row_Click[slotpositionX][slotpositionY]==0){
+    if(checkCol_Row_Flags[slotpositionX][slotpositionY]==0){
+      if(flagCount < bombCount){
+        println(flagCount);
+        showSlot(slotpositionX, slotpositionY, SLOT_FLAG);
+        checkCol_Row_Flags[slotpositionX][slotpositionY]=1;
+        flagCount++;
+        println(flagCount);
+      }
+      if(flagCount > bombCount){
+      showSlot(slotpositionX, slotpositionY, SLOT_OFF);
+      }
+    }
+
+    else{
+      println(flagCount);
+      showSlot(slotpositionX, slotpositionY, SLOT_OFF);
+      checkCol_Row_Flags[slotpositionX][slotpositionY]=0;
+      flagCount--;
+      println(flagCount);      
+    }
+  }
+ }
+ 
+   if((gameState == GAME_WIN || gameState == GAME_LOSE)){
+     gameState = GAME_START;
   }
 }
 
