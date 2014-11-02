@@ -11,6 +11,7 @@ int sideLength; // SLOT_SIZE * nSlot
 int ix; // (width - sideLength)/2
 int iy; // (height - sideLength)/2
 
+boolean bombExplode;
 int [][] Col_Row = new int[9][2];
 int [][] checkCol_Row_Bombs = new int[4][4];
 int [][] checkCol_Row_Flags = new int[4][4];
@@ -81,6 +82,9 @@ void draw(){
               }
             }
             gameState = GAME_WIN;
+          }
+          if(bombExplode){
+            gameState = GAME_LOSE;
           }
           
           break;  
@@ -369,7 +373,7 @@ void mouseClicked(){
        }
        
 
-       
+       bombExplode = false;
        clickCount = 0;
        flagCount = 0;
        setBombs();
@@ -391,9 +395,10 @@ void mousePressed(){
   if(mouseButton==LEFT){
     if(checkCol_Row_Bombs[slotpositionX][slotpositionY]==1){
       showSlot(slotpositionX, slotpositionY, SLOT_BOMB);
-      gameState = GAME_LOSE;
-      clickCount++;
-    }else{
+      bombExplode = true;
+
+    }
+    else if(checkCol_Row_Click[slotpositionX][slotpositionY]==0){
       showSlot(slotpositionX, slotpositionY, SLOT_SAFE);
       countNeighborBombs(slotpositionX,slotpositionY);
       checkCol_Row_Click[slotpositionX][slotpositionY] = 1;
