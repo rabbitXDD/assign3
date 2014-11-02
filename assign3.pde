@@ -429,10 +429,6 @@ void mousePressed(){
   }
  }
  
-   if((gameState == GAME_WIN || gameState == GAME_LOSE)){
-     gameState = GAME_START;
-  }
-}
 
 // press enter to start
 void keyPressed(){
