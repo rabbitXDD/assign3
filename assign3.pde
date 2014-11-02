@@ -163,7 +163,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
 
       
@@ -175,7 +175,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
 
       
@@ -187,7 +187,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
 
 
@@ -199,7 +199,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
 
 
@@ -211,7 +211,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
     
 
@@ -223,7 +223,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
     
 
@@ -235,7 +235,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
  
       case down_left:
@@ -246,7 +246,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
 
 
@@ -258,7 +258,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
 
   }
@@ -281,7 +281,7 @@ void setBombs(){
         
       int randomCol = ceil(random(0,4))-1;
       int randomRow = ceil(random(0,4))-1;
-      println(randomCol,randomRow);
+      //println(randomCol,randomRow);
         if(checkCol_Row_Bombs[randomCol][randomRow]==0){
             Col_Row[i][0]=randomCol;
             Col_Row[i][1]=randomRow;
@@ -408,11 +408,11 @@ void mousePressed(){
   if(mouseButton==RIGHT && checkCol_Row_Click[slotpositionX][slotpositionY]==0){
     if(checkCol_Row_Flags[slotpositionX][slotpositionY]==0){
       if(flagCount < bombCount){
-        println(flagCount);
+        //println(flagCount);
         showSlot(slotpositionX, slotpositionY, SLOT_FLAG);
         checkCol_Row_Flags[slotpositionX][slotpositionY]=1;
         flagCount++;
-        println(flagCount);
+        //println(flagCount);
       }
       if(flagCount > bombCount){
       showSlot(slotpositionX, slotpositionY, SLOT_OFF);
@@ -420,11 +420,11 @@ void mousePressed(){
     }
 
     else{
-      println(flagCount);
+      //println(flagCount);
       showSlot(slotpositionX, slotpositionY, SLOT_OFF);
       checkCol_Row_Flags[slotpositionX][slotpositionY]=0;
       flagCount--;
-      println(flagCount);      
+      //println(flagCount);      
     }
   }
  }
