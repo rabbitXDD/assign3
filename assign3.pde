@@ -11,6 +11,9 @@ int sideLength; // SLOT_SIZE * nSlot
 int ix; // (width - sideLength)/2
 int iy; // (height - sideLength)/2
 
+int clickBombX;
+int clickBombY;
+
 boolean bombExplode;
 int [][] Col_Row = new int[9][2];
 int [][] checkCol_Row_Bombs = new int[4][4];
@@ -31,6 +34,8 @@ final int SLOT_BOMB = 2;
 final int SLOT_FLAG = 3;
 final int SLOT_FLAG_BOMB = 4;
 final int SLOT_DEAD = 5;
+final int SLOT_EMPTY = 6;
+final int SLOT_BOMB_CLICK = 7;
 
 PImage bomb, flag, cross ,bg;
 
@@ -79,11 +84,43 @@ void draw(){
                 if(checkCol_Row_Flags[ix][iy]==1){
                   showSlot(ix, iy, SLOT_FLAG_BOMB);
                 }
+                if(checkCol_Row_Bombs[ix][iy]==1&&checkCol_Row_Flags[ix][iy]==0){
+                  showSlot(ix, iy, SLOT_BOMB);
+                }
+                if(checkCol_Row_Bombs[ix][iy]==0){
+                  showSlot(ix, iy, SLOT_SAFE);
               }
             }
+          }
             gameState = GAME_WIN;
           }
           if(bombExplode){
+            
+            for (int col=0; col < nSlot; col++){
+              for (int row=0; row < nSlot; row++){
+                  showSlot(col, row, SLOT_EMPTY);
+              }
+            }
+            
+            for(int ix=0;ix<4;ix++){
+              for(int iy=0;iy<4;iy++){
+                if(checkCol_Row_Bombs[ix][iy]==1&&checkCol_Row_Flags[ix][iy]==1){
+                  showSlot(ix, iy, SLOT_FLAG_BOMB);
+                }
+                if(checkCol_Row_Bombs[ix][iy]==0&&checkCol_Row_Flags[ix][iy]==1){
+                  showSlot(ix, iy, SLOT_FLAG);
+                }
+                if(checkCol_Row_Bombs[ix][iy]==1&&checkCol_Row_Flags[ix][iy]==0){
+                  showSlot(ix, iy, SLOT_BOMB);
+                }
+                if(checkCol_Row_Bombs[ix][iy]==0&&checkCol_Row_Flags[ix][iy]==0){
+                  showSlot(ix, iy, SLOT_SAFE);
+                }
+                if(ix == clickBombX && iy == clickBombY){
+                  showSlot(ix, iy, SLOT_BOMB_CLICK);
+                }
+            }
+          }
             gameState = GAME_LOSE;
           }
           
@@ -163,7 +200,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      //println(neighborBombs);
+      println(neighborBombs);
       return neighborBombs;
 
       
@@ -175,7 +212,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      //println(neighborBombs);
+      println(neighborBombs);
       return neighborBombs;
 
       
@@ -187,7 +224,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      //println(neighborBombs);
+      println(neighborBombs);
       return neighborBombs;
 
 
@@ -199,7 +236,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      //println(neighborBombs);
+      println(neighborBombs);
       return neighborBombs;
 
 
@@ -211,7 +248,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      //println(neighborBombs);
+      println(neighborBombs);
       return neighborBombs;
     
 
@@ -223,7 +260,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      //println(neighborBombs);
+      println(neighborBombs);
       return neighborBombs;
     
 
@@ -235,7 +272,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      //println(neighborBombs);
+      println(neighborBombs);
       return neighborBombs;
  
       case down_left:
@@ -246,7 +283,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      //println(neighborBombs);
+      println(neighborBombs);
       return neighborBombs;
 
 
@@ -258,7 +295,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      //println(neighborBombs);
+      println(neighborBombs);
       return neighborBombs;
 
   }
@@ -281,7 +318,7 @@ void setBombs(){
         
       int randomCol = ceil(random(0,4))-1;
       int randomRow = ceil(random(0,4))-1;
-      //println(randomCol,randomRow);
+      println(randomCol,randomRow);
         if(checkCol_Row_Bombs[randomCol][randomRow]==0){
             Col_Row[i][0]=randomCol;
             Col_Row[i][1]=randomRow;
@@ -309,6 +346,10 @@ void showSlot(int col, int row, int slotState){
   int x = ix + col*SLOT_SIZE;
   int y = iy + row*SLOT_SIZE;
   switch (slotState){
+    case SLOT_EMPTY:
+         fill(255);
+         rect(x,y,SLOT_SIZE,SLOT_SIZE);
+         break;
     case SLOT_OFF:
          fill(222,119,15);
          stroke(0);
@@ -319,6 +360,11 @@ void showSlot(int col, int row, int slotState){
           rect(x,y,SLOT_SIZE,SLOT_SIZE);
           image(bomb,x,y,SLOT_SIZE, SLOT_SIZE);
           break;
+    case SLOT_BOMB_CLICK:
+          fill(246,211,48);
+          rect(x,y,SLOT_SIZE,SLOT_SIZE);
+          image(bomb,x,y,SLOT_SIZE, SLOT_SIZE);
+          break;          
     case SLOT_SAFE:
           fill(255);
           rect(x,y,SLOT_SIZE,SLOT_SIZE);
@@ -394,7 +440,8 @@ void mousePressed(){
     
   if(mouseButton==LEFT){
     if(checkCol_Row_Bombs[slotpositionX][slotpositionY]==1){
-      showSlot(slotpositionX, slotpositionY, SLOT_BOMB);
+      clickBombX = slotpositionX;
+      clickBombY = slotpositionY;
       bombExplode = true;
 
     }
@@ -408,11 +455,11 @@ void mousePressed(){
   if(mouseButton==RIGHT && checkCol_Row_Click[slotpositionX][slotpositionY]==0){
     if(checkCol_Row_Flags[slotpositionX][slotpositionY]==0){
       if(flagCount < bombCount){
-        //println(flagCount);
+        println(flagCount);
         showSlot(slotpositionX, slotpositionY, SLOT_FLAG);
         checkCol_Row_Flags[slotpositionX][slotpositionY]=1;
         flagCount++;
-        //println(flagCount);
+        println(flagCount);
       }
       if(flagCount > bombCount){
       showSlot(slotpositionX, slotpositionY, SLOT_OFF);
@@ -420,15 +467,17 @@ void mousePressed(){
     }
 
     else{
-      //println(flagCount);
+      println(flagCount);
       showSlot(slotpositionX, slotpositionY, SLOT_OFF);
       checkCol_Row_Flags[slotpositionX][slotpositionY]=0;
       flagCount--;
-      //println(flagCount);      
+      println(flagCount);      
     }
   }
  }
- }
+ 
+
+}
 
 // press enter to start
 void keyPressed(){
