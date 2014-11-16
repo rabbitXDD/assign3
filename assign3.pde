@@ -272,7 +272,7 @@ int countNeighborBombs(int col,int row){
           }
         }
       }
-      println(neighborBombs);
+      //println(neighborBombs);
       return neighborBombs;
  
       case down_left:
